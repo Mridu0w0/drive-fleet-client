@@ -39,11 +39,11 @@ export default function HomePage() {
       {/* =========================================================
           1. BANNER SECTION
           ========================================================= */}
-      <section className="relative bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 min-h-[550px] flex items-center justify-center text-white px-4 py-16">
+      <section className="relative bg-linear-to-r from-slate-900 via-indigo-950 to-slate-900 min-h-137.5 flex items-center justify-center text-white px-4 py-16">
         <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&q=80&w=1920')] bg-cover bg-center mix-blend-overlay opacity-20"></div>
 
         <div className="relative max-w-4xl mx-auto text-center z-10 space-y-6">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight bg-gradient-to-r from-blue-400 via-indigo-200 to-white bg-clip-text text-transparent drop-shadow-md">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight bg-linear-to-r from-blue-400 via-indigo-200 to-white bg-clip-text text-transparent drop-shadow-md">
             DriveFleet Car Rental Platform
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed font-light">
@@ -119,7 +119,7 @@ export default function HomePage() {
                   />
                 </div>
                 {/* Car Details Info body */}
-                <div className="p-6 flex-grow space-y-3">
+                <div className="p-6 grow space-y-3">
                   <div className="flex justify-between items-start">
                     <h3 className="text-xl font-bold text-slate-900">
                       {car.carName}
