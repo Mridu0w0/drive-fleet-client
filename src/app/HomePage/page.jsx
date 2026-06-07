@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link"; // Next.js native routing link optimization
 import Image from "next/image";
+import toast from "react-hot-toast";
 
 export default function HomePage() {
   // State management using React Hooks
@@ -15,13 +16,16 @@ export default function HomePage() {
       try {
         setLoading(true);
         // Connect directly to your local Express backend server port
-        const response = await fetch("http://localhost:5000/api/cars");
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/cars`,
+        );
         const data = await response.json();
 
         // Ensure we display your required minimum of 6 cards
         setCars(data);
       } catch (error) {
-        console.error("Error communicating with backend database:", error);
+        // console.error("Error communicating with backend database:", error);
+        toast.error("Error communicating with backend database:", error);
       } finally {
         setLoading(false);
       }

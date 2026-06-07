@@ -28,18 +28,21 @@ const BookingPage = () => {
     setLoadingLogs(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/bookings", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/bookings`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
         },
-      });
+      );
       const data = await response.json();
       const targetArray = Array.isArray(data) ? data : data.bookings || [];
       setBookings(targetArray);
       toast.success("Booking history synced successfully!");
     } catch (err) {
-      console.error(err);
+      // console.error(err);
       toast.error(err.message || "Failed to sync booking data logs.");
     } finally {
       setLoadingLogs(false);

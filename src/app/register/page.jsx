@@ -47,7 +47,7 @@ const RegisterPage = () => {
 
     if (resData) {
       toast.success("Account created! Redirecting...");
-      router.push("/");
+      router.push("/login");
     }
 
     setLoading(false);
@@ -56,7 +56,7 @@ const RegisterPage = () => {
   const handleGoogleLogin = async () => {
     await authClient.signIn.social({
       provider: "google",
-      callbackURL: "/",
+      callbackURL: "/login",
     });
   };
 

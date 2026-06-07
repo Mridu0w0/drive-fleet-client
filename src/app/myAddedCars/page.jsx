@@ -4,6 +4,7 @@ import { authClient } from "@/lib/auth-client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 export default function MyAddedCarsPage() {
   const router = useRouter();
@@ -19,7 +20,15 @@ export default function MyAddedCarsPage() {
   useEffect(() => {
     const fetchCars = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/cars");
+        const { data: tokenData } = await authClient.token();
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/cars`,
+          {
+            headers: {
+              Authorization: `Bearer ${tokenData?.token || ""}`,
+            },
+          },
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch cars data");
         }
@@ -54,9 +63,15 @@ export default function MyAddedCarsPage() {
     if (!selectedCar?._id) return;
 
     try {
+      const { data: tokenData } = await authClient.token();
       const response = await fetch(
-        `http://localhost:5000/api/cars/${selectedCar._id}`,
-        { method: "DELETE" },
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/cars/${selectedCar._id}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${tokenData?.token || ""}`,
+          },
+        },
       );
       const data = await response.json();
 
@@ -65,13 +80,13 @@ export default function MyAddedCarsPage() {
           prevCars.filter((c) => c._id !== selectedCar._id),
         );
         setIsDeleteOpen(false);
-        alert("Car deleted successfully!");
+        toast.success("Car deleted successfully!");
       } else {
-        alert(`Failed to delete: ${data.message || "Unknown error"}`);
+        toast.error(`Failed to delete: ${data.message || "Unknown error"}`);
       }
     } catch (error) {
-      console.error("Error deleting car:", error);
-      alert("An error occurred while deleting the car.");
+      // console.error("Error deleting car:", error);
+      toast.error("An error occurred while deleting the car.", error);
     }
   };
 

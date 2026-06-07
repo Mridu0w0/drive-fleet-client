@@ -9,12 +9,15 @@ const CarDetails = async ({ params }) => {
 
   const token = await auth.api.getToken({ headers: await headers() });
 
-  console.log("Car ID:", id);
-  const res = await fetch(`http://localhost:5000/api/cars/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
+  // console.log("Car ID:", id);
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/cars/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
-  });
+  );
   const car = await res.json();
 
   return (

@@ -70,7 +70,7 @@ export default function ExploreCarsPage() {
           queryParams.append("type", selectedType);
 
         const baseUrl =
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+          process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:5000";
         const response = await fetch(
           `${baseUrl}/api/cars?${queryParams.toString()}`,
         );

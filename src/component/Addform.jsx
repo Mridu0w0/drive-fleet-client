@@ -7,6 +7,7 @@ import { authClient } from "@/lib/auth-client";
 
 export default function AddCarPage() {
   // const [loading, setLoading] = useState(false);
+  const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
   const loading = isPending;
 
@@ -23,30 +24,35 @@ export default function AddCarPage() {
       ownerEmail: session?.user?.email,
     };
 
-    console.log("Submitting Car Data to Database:", submissionData);
+    // console.log("Submitting Car Data to Database:", submissionData);
 
     try {
-      const response = await fetch("http://localhost:5000/api/cars", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const { data: tokenData } = await authClient.token();
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/cars`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${tokenData?.token || ""}`,
+          },
+          body: JSON.stringify(submissionData),
         },
-        body: JSON.stringify(submissionData),
-      });
+      );
 
-      // const result = await response.json();
+      const result = await response.json();
 
-      if (response.ok) {
+      if (result.ok || response.ok) {
         toast.success("DriveFleet vehicle listing added successfully!");
-
-        redirect("/ExploreCarsPage");
+        router.push("/ExploreCarsPage");
       } else {
         toast.error(result.message || "Failed to finalize database insertion.");
       }
     } catch (err) {
-      console.error("Network communication failure:", err);
+      // console.error("Network communication failure:", err);
       toast.error(
         "Database connection timeout. Verify local port configuration.",
+        err,
       );
     }
   };

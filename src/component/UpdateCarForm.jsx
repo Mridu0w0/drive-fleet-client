@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
 
 export default function UpdateCarForm({ carId }) {
   const router = useRouter();
@@ -25,7 +27,15 @@ export default function UpdateCarForm({ carId }) {
   useEffect(() => {
     const fetchCarDetails = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/cars/${carId}`);
+        const { data: tokenData } = await authClient.token();
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_SERVER_URL}/api/cars/${carId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${tokenData?.token || ""}`,
+            },
+          },
+        );
         if (!response.ok) throw new Error("Failed to load car details");
         const data = await response.json();
 
@@ -67,11 +77,18 @@ export default function UpdateCarForm({ carId }) {
     setUpdating(true);
 
     try {
-      const response = await fetch(`http://localhost:5000/api/cars/${carId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
+      const { data: tokenData } = await authClient.token();
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/cars/${carId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${tokenData?.token || ""}`,
+          },
+          body: JSON.stringify(formData),
+        },
+      );
 
       if (response.ok) {
         alert("Car listing updated successfully!");
@@ -81,8 +98,9 @@ export default function UpdateCarForm({ carId }) {
         alert("Failed to update car listing.");
       }
     } catch (error) {
-      console.error(error);
-      alert("An error occurred.");
+      // console.error(error);
+      toast.error("An error occurred while updating the car listing.", error);
+      // alert("An error occurred.");
     } finally {
       setUpdating(false);
     }
