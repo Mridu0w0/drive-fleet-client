@@ -36,7 +36,7 @@ const RegisterPage = () => {
       image:
         data.image ||
         "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png",
-      callbackURL: "/login",
+      callbackURL: "/",
     });
 
     if (error) {
@@ -47,7 +47,7 @@ const RegisterPage = () => {
 
     if (resData) {
       toast.success("Account created! Redirecting...");
-      router.push("/login");
+      router.push("/");
     }
 
     setLoading(false);
