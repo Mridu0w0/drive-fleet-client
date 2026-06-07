@@ -11,6 +11,7 @@ const BookingPage = () => {
 
   // Auth Session Hook
   const { data: session, isPending } = authClient.useSession();
+  const user = session?.user;
 
   // Animated page entry configurations
   const cardSpring = useSpring({
@@ -22,14 +23,18 @@ const BookingPage = () => {
   // 1. Initialize loading state to false
   const [bookings, setBookings] = useState([]);
   const [loadingLogs, setLoadingLogs] = useState(false);
+  console.log("Current session user:", user?.email);
 
   // 2. Fetch Booking History Function
   const fetchBookingHistory = async () => {
+    if (!user?.email) return;
+
     setLoadingLogs(true);
 
     try {
+      // Pass the email simply in the URL query string
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/bookings`,
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/bookings?email=${user?.email}`,
         {
           method: "GET",
           headers: {
@@ -37,12 +42,12 @@ const BookingPage = () => {
           },
         },
       );
+
       const data = await response.json();
       const targetArray = Array.isArray(data) ? data : data.bookings || [];
       setBookings(targetArray);
       toast.success("Booking history synced successfully!");
     } catch (err) {
-      // console.error(err);
       toast.error(err.message || "Failed to sync booking data logs.");
     } finally {
       setLoadingLogs(false);
